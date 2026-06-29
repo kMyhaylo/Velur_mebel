@@ -229,11 +229,26 @@ ul, ol { list-style: none; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 30px; }
 
 .hero__trust {
-  display: flex; flex-wrap: wrap; gap: 12px 26px;
-  font-size: .9rem; color: rgba(247, 243, 236, .72);
+  display: grid;
+  grid-template-columns: max-content max-content; /* Чітко 2 колонки по розміру тексту */
+  justify-content: start; /* Притискаємо всю сітку ліворуч */
+  gap: 14px 32px; /* 14px між рядками, 32px між стовпцями */
+  font-size: .9rem;
+  color: rgba(247, 243, 236, .72);
 }
-.hero__trust li { display: flex; align-items: center; gap: 8px; }
-.hero__trust li::before { content: "✦"; color: var(--gold); font-size: .8em; }
+
+.hero__trust li {
+  display: flex;
+  align-items: flex-start; /* Зірочка буде завжди зверху, якщо довгий текст піде на два рядки */
+  gap: 8px;
+}
+
+.hero__trust li::before {
+  content: "✦";
+  color: var(--gold);
+  font-size: .8em;
+  margin-top: 4px; /* Опускаємо зірочку, щоб вона була на одному рівні з текстом */
+}
 
 /* Signature velvet panel (pure CSS) */
 .hero__visual { display: flex; justify-content: center; }
@@ -257,15 +272,59 @@ ul, ol { list-style: none; }
 }
 @keyframes sheen { 0%,100% { transform: translateX(-12%); } 50% { transform: translateX(12%); } }
 
+/* Базовий клас для зразків */
 .velvet-swatch {
   position: absolute;
-  border-radius: 14px;
-  box-shadow: 0 18px 36px -18px rgba(0,0,0,.55);
+  border-radius: 12px;
+  /* Додаємо тонку світлу рамку, як у реальних зразків тканини */
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px -15px rgba(0,0,0,0.6);
+  /* Анімація левітації (визначена нижче) */
+  animation: floatSwatch 6s ease-in-out infinite;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  overflow: hidden; /* Щоб картинки (якщо додасте) не вилазили за краї */
 }
-.velvet-swatch--1 { width: 46%; height: 30%; left: 10%; top: 14%; background: linear-gradient(160deg, #6E3A65, #42203C); }
-.velvet-swatch--2 { width: 38%; height: 26%; right: 12%; top: 40%; background: linear-gradient(160deg, #C8A24E, #8C6A33); }
-.velvet-swatch--3 { width: 52%; height: 22%; left: 16%; bottom: 12%; background: linear-gradient(160deg, #5A2A52, #371832); }
 
+/* Ефект при наведенні мишкою (злегка підіймається) */
+.velvet-swatch:hover {
+  transform: scale(1.05) translateY(-10px) !important;
+  box-shadow: 0 30px 50px -15px rgba(0,0,0,0.8);
+  z-index: 10;
+}
+
+/* Перший блок (Баклажановий) */
+.velvet-swatch--1 {
+  width: 46%; height: 30%;
+  left: 8%; top: 12%;
+  background: linear-gradient(160deg, #6E3A65, #42203C);
+  transform: rotate(-6deg); /* Легкий нахил вліво */
+  animation-delay: 0s;
+}
+
+/* Другий блок (Золотий) */
+.velvet-swatch--2 {
+  width: 42%; height: 28%;
+  right: 6%; top: 38%;
+  background: linear-gradient(160deg, #C8A24E, #8C6A33);
+  transform: rotate(4deg); /* Легкий нахил вправо */
+  animation-delay: -2s; /* Зсув анімації, щоб рухались в різнобій */
+}
+
+/* Третій блок (Темний) */
+.velvet-swatch--3 {
+  width: 50%; height: 24%;
+  left: 12%; bottom: 10%;
+  background: linear-gradient(160deg, #5A2A52, #371832);
+  transform: rotate(-3deg);
+  animation-delay: -4s;
+}
+
+/* Ключові кадри для плавної левітації */
+@keyframes floatSwatch {
+  0% { margin-top: 0px; }
+  50% { margin-top: -12px; }
+  100% { margin-top: 0px; }
+}
 .velvet-badge {
   position: absolute; right: 18px; top: 18px; z-index: 2;
   display: flex; align-items: center; gap: 10px;
@@ -576,4 +635,28 @@ ul, ol { list-style: none; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+@media (max-width: 560px) {
+  .hero__trust {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .velvet-panel {
+    width: 280px;
+    margin: 40px auto 0;
+  }
+
+  .velvet-swatch {
+    border-radius: 8px;
+  }
+
+  @keyframes floatSwatch {
+    0% { margin-top: 0px; }
+    50% { margin-top: -6px; }
+    100% { margin-top: 0px; }
+  }
 }
